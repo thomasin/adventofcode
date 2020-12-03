@@ -1,0 +1,16 @@
+dabAcCaCBAcCcaDA
+
+x: d, y: a, z: b
+x: a, y: b, z: A
+x: b, y: A, z: c
+x: A, y: c, z: C
+x: A, y: a, z: C
+x: b, y: C, z: B
+x: C, y: B, z: A
+x: B, y: A, z: c
+x: A, y: c, z: C
+x: A, y: c, z: a
+x: c, y: a, z: D
+x: a, y: D, z: A
+
+dabCBAcaDA
