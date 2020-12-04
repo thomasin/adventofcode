@@ -94,9 +94,7 @@ passportField fieldName fieldParser = do
 
 
 throwAwayField :: ParseError String Void -> Parser (Maybe a)
-throwAwayField _ = do
-    void anyField
-    return Nothing
+throwAwayField _ = Nothing <$ anyField
 
 
 -- Parses a blank lineb
