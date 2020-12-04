@@ -6,3 +6,4 @@
 !*/
 # ignore .hi files
 *.hi
+*.o
