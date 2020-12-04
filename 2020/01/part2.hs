@@ -22,8 +22,8 @@ main = do
 
 find2020s :: [Int] -> [Int] -> IntSet.IntSet -> Maybe Int
 find2020s [] _ _ = Nothing
-find2020s (_:_:[]) [] _ = Nothing
 find2020s (_:[]) [] _ = Nothing
+find2020s (_:_:[]) [] _ = Nothing
 find2020s (_:x1b:x1s) [] numberSet = find2020s (x1b:x1s) x1s numberSet
 find2020s primary@(x1:_) (x2:x2s) numberSet
     | hasOpposing x1 x2 numberSet = Just (x1 * x2 * (opposing x1 x2))
