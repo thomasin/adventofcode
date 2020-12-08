@@ -10,10 +10,11 @@
 
 import Data.Maybe (mapMaybe)
 import Text.Read
-import Data.Vector.Unboxed (Vector, update, singleton, fromList, toList, (!?), (//))
+import Data.Vector.Unboxed (Vector, fromList, (!?), (//))
 
 
-type Instructions = Vector (Bool, Char, Int)
+type Instruction = (Bool, Char, Int)
+type Instructions = Vector Instruction
 
 
 main :: IO ()
@@ -33,16 +34,11 @@ followInstructions accumulator instructions index =
           _ -> Nothing -- Either index does not exist, or came across an invalid instruction
 
 
-visit :: Int -> (Bool, Char, Int) -> Instructions -> Instructions
-visit index (_, c, a) instructions =
-    instructions // [(index, (True, c, a))]
+visit :: Int -> Instruction -> Instructions -> Instructions
+visit index (_, c, a) instructions = instructions // [(index, (True, c, a))]
 
 
-instruction :: [String] -> Maybe (Bool, Char, Int)
-instruction ((c:_):int:[]) = (,,) False c <$> signedInt int
+instruction :: [String] -> Maybe Instruction
+instruction ((c:_):('+':num):[]) = (,,) False c <$> readMaybe num
+instruction ((c:_):num:[]) = (,,) False c <$> readMaybe num
 instruction _ = Nothing
-
-
-signedInt :: String -> Maybe Int
-signedInt ('+':num) = readMaybe num
-signedInt num = readMaybe num
