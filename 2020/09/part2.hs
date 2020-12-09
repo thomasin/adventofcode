@@ -10,6 +10,7 @@
 
 import Data.Maybe (mapMaybe)
 import Text.Read (readMaybe)
+import Control.Arrow ((&&&))
 
 
 invalidNumber :: Int
@@ -19,15 +20,11 @@ invalidNumber = 507622668
 main :: IO ()
 main = do
     input <- mapMaybe readMaybe <$> lines <$> getContents
-    print $ uncurry (+) <$> intoTuple minimum maximum <$> findContiguousSet input [] 0
-
-
-intoTuple :: (x -> a) -> (x -> b) -> x -> (a, b)
-intoTuple fa fb x = (fa x, fb x)
+    print $ uncurry (+) <$> (minimum &&& maximum) <$> findContiguousSet input [] 0
 
 
 findContiguousSet :: [Int] -> [Int] -> Int -> Maybe [Int]
-findContiguousSet [] set _ = Nothing
+findContiguousSet [] _ _ = Nothing
 findContiguousSet (x:xs) [] total = findContiguousSet xs [x] (total + x)
 findContiguousSet nums@(x:xs) set@(y:ys) total
     | x + total == invalidNumber = Just (set ++ [x])
