@@ -27,9 +27,9 @@ intoTuple fa fb x = (fa x, fb x)
 
 
 findContiguousSet :: [Int] -> [Int] -> Int -> Maybe [Int]
-findContiguousSet [] set total = if total == invalidNumber then Just set else Nothing
+findContiguousSet [] set _ = Nothing
 findContiguousSet (x:xs) [] total = findContiguousSet xs [x] (total + x)
 findContiguousSet nums@(x:xs) set@(y:ys) total
-    | total == invalidNumber = Just (y:ys)
-    | total > invalidNumber = findContiguousSet nums ys (total - y)
+    | x + total == invalidNumber = Just (set ++ [x])
+    | x + total > invalidNumber = findContiguousSet nums ys (total - y)
     | otherwise = findContiguousSet xs (set ++ [x]) (total + x)
