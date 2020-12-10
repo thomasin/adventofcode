@@ -24,6 +24,6 @@ countBranches :: [Int] -> [Int]
 countBranches [] = []
 countBranches (x:xs) =
     let branches = length $ takeWhile ((>) 4 . flip (-) x) xs
-        rest = countBranches xs
-    in if branches == 0 then 1:rest
-       else (sum $ take branches $ rest):rest
+    in case countBranches xs of
+        [] -> [1]
+        rest -> (sum $ take branches $ rest):rest
