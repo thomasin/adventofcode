@@ -3,52 +3,51 @@
  --copy-bins
  --resolver nightly-2020-11-28
  --install-ghc
- --package "base matrix"
+ --package "base grids"
  --ghc-options=-Wall
 -}
 
-{-# LANGUAGE PolyKinds #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeApplications #-}
 {-# LANGUAGE DataKinds #-}
 
-import Data.Matrix
-import Data.List
-import Data.Maybe
--- import Data.Foldable
--- import Data.Functor.Compose
+import Data.Grid
+import Data.Foldable
+import Data.Functor.Compose
 
 
-type Seats = Matrix Char
+type Seats = Grid '[98,96] Char
 
 
 main :: IO ()
 main = do
     input <- lines <$> getContents
-    let seats = fromLists input :: Seats
-    print $ choose $ choose seats
+    let seats = fromNestedLists input :: Maybe Seats
+    print $ occupied <$> toList <$> start <$> seats
+
+
+start :: Seats -> Seats
+start seats =
+    let chosen = choose seats
+    in if chosen == seats then chosen else start chosen
 
 
 choose :: Seats -> Seats
-choose seats = mapPos (decide seats) seats
+choose = autoConvolute @[3, 3] omitBounds rule
 
 
-decide :: Seats -> (Int, Int) -> Char -> Char
-decide seats pos seat =
-    case (seat, neighbours seats seat pos) of
-        ('#', n) -> if (length $ filter occupied n) >= 4 then 'L' else '#'
-        ('L', n) -> if (length $ filter occupied n) == 0 then '#' else 'L'
-        (s, _) -> s
+rule :: Compose (Grid '[3, 3]) Maybe Char -> Char
+rule (Compose window') =
+    let (seat, mn) = partitionFocus window'
+    in case (seat, occupied $ neighbours mn) of
+            (Just '#', count) | count >= 4 -> 'L'
+            (Just 'L', count) | count == 0 -> '#'
+            (Just s, _) -> s
+            _ -> '.'
 
 
-occupied = (==) '#'
+occupied :: [Char] -> Int
+occupied = length . filter ((==) '#')
 
 
-neighbours :: Seats -> Char -> (Int, Int) -> [Char]
-neighbours seats seat (row, col) =
-    let startingRow = max 1 (row - 1)
-        endingRow = min (nrows seats) (row + 1)
-        startingCol = max 1 (col - 1)
-        endingCol = min (ncols seats) (col + 1)
-        subm = submatrix startingRow endingRow startingCol endingCol seats
-    in delete seat . toList $ subm
+neighbours :: Grid dim (Maybe (Maybe Char)) -> [Char]
+neighbours = toList . Compose . Compose
