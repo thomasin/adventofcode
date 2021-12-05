@@ -17,36 +17,29 @@ struct Vent {
 }
 
 
+fn div(a: i16, b: i16) -> i16 {
+    if b == 0 {
+        0
+    } else {
+        a / b
+    }
+}
+
+
 impl Vent {
     pub fn new(start: Point, end: Point) -> Vent {
-        if start.x == end.x && start.y == end.y {
-            Vent {
-                points: HashSet::from([Point { x: start.x, y: start.y }]),
-            }
+        let change_x = end.x - start.x;
+        let change_y = end.y - start.y;
+        let max_change = cmp::max(change_x.abs(), change_y.abs());
 
-        } else if start.x == end.x {
-            Vent {
-                points: (cmp::min(start.y, end.y)..=cmp::max(start.y, end.y))
-                    .map(|y| Point { x: start.x, y: y }).collect(),
-            }
-
-        } else if start.y == end.y {
-            Vent {
-                points: (cmp::min(start.x, end.x)..=cmp::max(start.x, end.x))
-                    .map(|x| Point { x: x, y: start.y }).collect(),
-            }
-
-        } else {
-            Vent {
-                points: (0..=((end.x - start.x).abs()))
-                    .map(|i| {
-                        Point {
-                            x: start.x + (i * ((end.x - start.x) / (end.x - start.x).abs())),
-                            y: start.y + (i * ((end.y - start.y) / (end.y - start.y).abs())),
-                        }
-                    }).collect(),
-            }
-
+        Vent {
+            points: (0..=max_change)
+                .map(|i| {
+                    Point {
+                        x: start.x + (i * div(change_x, max_change.abs())),
+                        y: start.y + (i * div(change_y, max_change.abs())),
+                    }
+                }).collect()
         }
     }
 }
