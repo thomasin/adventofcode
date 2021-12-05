@@ -23,16 +23,19 @@ impl Vent {
             Vent {
                 points: HashSet::from([Point { x: start.x, y: start.y }]),
             }
+
         } else if start.x == end.x {
             Vent {
                 points: (cmp::min(start.y, end.y)..=cmp::max(start.y, end.y))
                     .map(|y| Point { x: start.x, y: y }).collect(),
             }
+
         } else if start.y == end.y {
             Vent {
                 points: (cmp::min(start.x, end.x)..=cmp::max(start.x, end.x))
                     .map(|x| Point { x: x, y: start.y }).collect(),
             }
+
         } else {
             Vent {
                 points: (0..=((end.x - start.x).abs()))
@@ -43,6 +46,7 @@ impl Vent {
                         }
                     }).collect(),
             }
+
         }
     }
 }
