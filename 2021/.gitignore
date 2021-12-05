@@ -7,3 +7,11 @@
 # ignore .hi files
 *.hi
 *.o
+
+# elm
+node_modules
+elm-stuff
+index.html
+
+# rust
+target

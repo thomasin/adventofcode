@@ -1,0 +1,19 @@
+[package]
+name = "_2021"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+itertools = "0"
+
+
+[[bin]]
+name = "_05_01"
+path = "05/part1.rs"
+
+
+[[bin]]
+name = "_05_02"
+path = "05/part2.rs"
